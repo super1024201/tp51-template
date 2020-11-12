@@ -1,4 +1,5 @@
 <?php
+
 namespace app\index\controller;
 
 class Index
@@ -10,6 +11,7 @@ class Index
 
     public function hello($name = 'ThinkPHP5')
     {
+        echo 1;
         return 'hello,' . $name;
     }
 }
