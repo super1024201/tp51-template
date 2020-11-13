@@ -6,9 +6,7 @@
 
 namespace app\common\model;
 
-use think\Model;
-
-class Error extends Model
+class Error extends Common
 {
     public $pk = 'error_id';
 
@@ -39,46 +37,12 @@ class Error extends Model
             $text = json_encode($text, JSON_UNESCAPED_UNICODE);
         }
         $error = $where . ' ---> ' . $text;
-        $exist = self::getOneByWhere([['text', '=', $error]]);
+        $exist = $this->getOneByWhere([['text', '=', $error]]);
         if ($exist) {
-            return self::updateOneByID($exist[$this->pk], ['last_time' => time()]);
+            return $this->updateOneByID($exist[$this->pk], ['last_time' => time()]);
         } else {
-            return self::insertOne($error);
+            return $this->insertOne(['text' => $text, 'time' => time(), 'last_time' => time()]);
         }
-    }
-
-    /**
-     * get one by where
-     * @access private
-     * @param array $where
-     * @return object
-     */
-    private function getOneByWhere(array $where)
-    {
-        return $this->where($where)->find();
-    }
-
-    /**
-     * insert one
-     * @access private
-     * @param string $error 报错详情
-     * @return int|string
-     */
-    private function insertOne(string $error)
-    {
-        return $this->insert(['text' => $error, 'time' => time(), 'last_time' => time()]);
-    }
-
-    /**
-     * update one by ID
-     * @access private
-     * @param int $id ID
-     * @param array $data 数据数组
-     * @return int|mixed
-     */
-    private function updateOneByID(int $id, array $data)
-    {
-        return $this->where([[$this->pk, '=', $id]])->update($data);
     }
 
 }
